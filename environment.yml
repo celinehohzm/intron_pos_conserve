@@ -1,0 +1,13 @@
+name: intron_conserv_env
+channels:
+  - bioconda
+  - conda-forge
+dependencies:
+  - blast
+  - python=3.7
+  - numpy
+  - pandas
+  - muscle
+  - entrez-direct
+  - biopython
+  - ete3
