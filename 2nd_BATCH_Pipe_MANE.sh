@@ -44,7 +44,7 @@ for protein_id in $(cat "$orthologs_protein_id_list"); do
     # python3 1_extract_table.py NP_000005.3_gene_table.txt NP_000005.3 > extracted_table.txt
 
     # Outputs ${first_protein_id}_sequence_w_introns.fasta and ${first_protein_id}_intron_positions.txt
-    python3 2_extract_n_insert_introns.py full_extracted_table.txt ${first_protein_id}_sequences.fasta ${protein_id} ${first_protein_id}
+    python3 2.1_extract_n_insert_introns.py full_extracted_table.txt ${first_protein_id}_sequences.fasta ${protein_id} ${first_protein_id}
     # python3 2.1_extract_n_insert_introns.py extracted_table.txt NP_000005.3_sequences.fasta NP_000005.3
 
     echo "Completed processing ${protein_id}"

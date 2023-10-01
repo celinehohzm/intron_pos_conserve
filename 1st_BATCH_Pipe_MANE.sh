@@ -59,4 +59,6 @@ for MANE_protein_id in $(cat "$MANE_protein_id_list"); do
 
     echo "Completed processing MANE protein ${MANE_protein_id}"
 
+    rm full_aln_seq_w_introns.afa
+    rm full_temp.txt
 done
