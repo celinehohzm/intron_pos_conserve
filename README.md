@@ -4,7 +4,7 @@
 To keep track of the number of recent intron gains in primates
 
 ## Why is this important??
-Can improve annotation - 
+Can improve annotation - \
 If introns are conserved in a certain faimily, we can infer that other species who belong to that family have this intron too!
 
 ## Input: 
@@ -30,4 +30,24 @@ A file with any number of NCBI protein accession numbers (eg. NP_000005.3)
 6. For each intron, count how many species have introns aligned/not unaligned at that position
 7. Build tree that shows intron conservation via ETEToolkit
 
+
+## Steps to run
+### 1. Creating environment
+```
+conda env create -f environment.yml
+```
+```
+conda activate intron_conserv_env
+```
+
+### 2. Prepare protein_ids.txt input file
+Include all your NCBI protein ids in the file, eg. ```test/test_proteinid.txt```
+
+### 3. Run intron_pos_conserv
+``` ./intron_pos_conserv.sh ../test/test_proteinid.txt```
+
+### 4. See results
+A directory will be created for each separate protein_id.  \
+Each directory contains: \
+1. 
 
