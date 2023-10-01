@@ -18,14 +18,10 @@ for MANE_protein_id in $(cat "$MANE_protein_id_list"); do
     mkdir -p "${MANE_protein_id}"
 
     # outputs ${MANE_protein_id}_.fasta
-    python3 1_MANE_pipe_extract_protein_fasta_from_multifasta.py ${MANE_protein_id} MANE.GRCh38.v1.0.refseq_protein.faa
+    python3 1_MANE_pipe_extract_protein_fasta_from_multifasta.py ${MANE_protein_id} ../data/MANE.GRCh38.v1.0.refseq_protein.faa
 
     # outputs blastp orthologs
-    ##/ccb/sw/bin/blastp -query ${MANE_protein_id}_.fasta -db refseq_protein -entrez_query "txid7742[ORGN] NOT txid9443[ORGN]" -out ${MANE_protein_id}_orthologs.txt -outfmt "6 std staxids scomname ssciname" -remote
-    # /ccb/sw/bin/blastp -query NP_000005.3/NP_000005.3_.fasta -db refseq_protein -entrez_query "txid7742[ORGN] NOT txid9443[ORGN]" -out NP_000005.3_orthologs.txt -outfmt "6 std staxids scomname ssciname" -remote
-    # /home/choh1/ncbi-blast-2.14.0+/bin/blastp -query ${MANE_protein_id}_.fasta -db /home/choh1/ncbi-blast-2.14.0+/refseq_protein_db/refseq_protein -out ${MANE_protein_id}_orthologs.txt -seqidlist /home/choh1/ncbi-blast-2.14.0+/refseq_protein_db/primates_acc_alias_blastdb.txt -outfmt "6 std staxids scomname ssciname"
-
-    /home/choh1/ncbi-blast-2.14.0+/bin/blastp -query /home/choh1/intron_pos_conserv/intron_pos_conserve/${MANE_protein_id}_.fasta -db /home/choh1/ncbi-blast-2.14.0+/refseq_protein_db/refseq_protein -out ${MANE_protein_id}_orthologs.txt -taxidlist /home/choh1/ncbi-blast-2.14.0+/bin/vertebrates_except_primates_taxids.txt -outfmt "6 std staxids scomname ssciname"
+    blastp -query ${MANE_protein_id}_.fasta -db refseq_protein -entrez_query "txid7742[ORGN] NOT txid9443[ORGN]" -out ${MANE_protein_id}_orthologs.txt -outfmt "6 std staxids scomname ssciname" -remote
 
     # filter alignment
     python3 1.5_MANE_filter_alignment.py ${MANE_protein_id}_orthologs.txt ${MANE_protein_id}_orthologs_protein_ids.txt
@@ -40,7 +36,7 @@ for MANE_protein_id in $(cat "$MANE_protein_id_list"); do
     grep -v '^$'  ${MANE_protein_id}_sequence_w_introns.fa | grep -v '^XX' > ${MANE_protein_id}_cleaned_sequence_w_introns.fa
 
     # MUSCLE alignment
-    /home/choh1/intron_pos_conserv/muscle5.1.linux_intel64 -align ${MANE_protein_id}_cleaned_sequence_w_introns.fa -output full_aln_seq_w_introns.afa
+    muscle -align ${MANE_protein_id}_cleaned_sequence_w_introns.fa -output full_aln_seq_w_introns.afa
 
     # reorder MUSCLE alignment to set human protein to the top
     python3 2_MANE_reorder_alignment.py full_aln_seq_w_introns.afa ${MANE_protein_id}_reorder_aln_seq_w_introns.afa ${MANE_protein_id}
