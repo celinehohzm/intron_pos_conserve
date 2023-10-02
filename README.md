@@ -18,7 +18,9 @@ A file with any number of NCBI protein accession numbers (eg. NP_000005.3)
   - the subgroup in the tree that best fits that intron gain
 
 ## What counts as an intron gain event?
-
+- Non-conserved in a minimum of 10% of all examined orthologous species.
+- We allotted "intron conservation scores" to each topology clusters following the criteria of maximized intron preservation and minimized non-conservation
+- Subgroup with highest intron conservation score is chosen as the timeline where the intron was first gained.
 
 
 ## Methods:
@@ -48,6 +50,8 @@ Include all your NCBI protein ids in the file, eg. ```test/test_proteinid.txt```
 
 ### 4. See results
 A directory will be created for each separate protein_id.  \
-Each directory contains: \
-1. 
+Each directory contains: 
+1. A NCBI Taxa Tree with color annotation that shows if each intron in the protein is aligned or not aligned to the human protein introns (red = aligned, blue = not aligned)
+2. An intron analysis file for each protein that shows for each intron, what species have that intron aligned, and which species do not
+3. A ALL_recent_introns.txt file that tracks all the recent introns (useful if you have more than one protein id in the input file)
 
