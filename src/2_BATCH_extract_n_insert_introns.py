@@ -32,8 +32,12 @@ def new_extract_aa_intron_positions(table_path):
     intron_pos = [x + 1 for x in protein_coding_len[:-1]]
     print("intron_positions", intron_pos)
 
-    return intron_pos
+    total_protein_len = protein_coding_len[-1]
+    print("total_protein_len", total_protein_len)
+    intron_pos_score = [ round((x / total_protein_len) * 100, 2) for x in intron_pos]
+    print("intron_pos_score", intron_pos_score)
 
+    return intron_pos, intron_lengths, intron_pos_score
 
 def insert_introns_into_sequence(sequence, intron_positions):
     sequence_with_introns = list(sequence)
@@ -43,35 +47,41 @@ def insert_introns_into_sequence(sequence, intron_positions):
 
     return ''.join(sequence_with_introns)
 
-def extract_amino_acid_sequence(file_content):
-    lines = file_content.split('\n')
-    sequence_lines = [line for line in lines if not line.startswith(">")]
-    return "".join(sequence_lines)
+def get_sequence_from_fasta(fasta_content, protein_id):
+    # Splitting the content into lines
+    lines = fasta_content.strip().split('\n')
+    # Iterating through the lines
+    for i, line in enumerate(lines):
+        if line.startswith(">") and protein_id in line:
+            # Return the next line if the protein_id is found
+            return line, lines[i + 1]
+    return None
 
-def get_fasta_header(file_content):
-    lines = file_content.split('\n')
-    header_line = [line for line in lines if line.startswith(">")]
-    return header_line[0] if header_line else ""
 
 if __name__ == '__main__':
-    if len(sys.argv) != 4:
-        print('Usage: python insert_introns.py <table.txt> <amino_acid_fasta.txt> <first_protein_id>')
+    if len(sys.argv) != 5:
+        print('Usage: python insert_introns.py <table.txt> <amino_acid_fasta.txt> <protein_id> <first_protein_id>')
         sys.exit(1)
 
     table_path = sys.argv[1]
     aa_fasta_path = sys.argv[2]
-    first_protein_id = sys.argv[3]
+    protein_id = sys.argv[3]
+    first_protein_id = sys.argv[4]
 
     try:
-        aa_intron_positions = new_extract_aa_intron_positions(table_path)
+        aa_intron_positions, intron_lengths, intron_pos_score = new_extract_aa_intron_positions(table_path)
 
         with open(aa_fasta_path, 'r') as f:
             file_content = f.read()
 
-        fasta_header = get_fasta_header(file_content)
-        amino_acid_sequence = extract_amino_acid_sequence(file_content)
+        fasta_header, amino_acid_sequence = get_sequence_from_fasta(file_content, protein_id)
 
         sequence_with_introns = insert_introns_into_sequence(amino_acid_sequence, aa_intron_positions)
+
+
+        print("amino_acid_sequence", amino_acid_sequence)
+        print("sequence_with_introns", sequence_with_introns)
+
 
         with open(first_protein_id + "_sequence_w_introns.fa", 'a') as f:
             f.write(f"{fasta_header}\n")
@@ -81,6 +91,13 @@ if __name__ == '__main__':
             f.write(f"{fasta_header}\n")
             f.write(', '.join(map(str, aa_intron_positions)) + '\n')
 
+        with open(first_protein_id + "_intron_lengths.txt", 'a') as f:
+            f.write(f"{fasta_header}\n")
+            f.write(', '.join(map(str, intron_lengths)) + '\n')
+
+        with open(first_protein_id + "_intron_position_score.txt", 'a') as f:
+            f.write(f"{fasta_header}\n")
+            f.write(', '.join(map(str, intron_pos_score)) + '\n')
 
     except Exception as e:
         print(f"An error occurred: {e}")

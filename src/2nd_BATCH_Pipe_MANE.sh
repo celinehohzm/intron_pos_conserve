@@ -4,6 +4,7 @@
 #     echo "Usage: $0 <protein_id_list.txt> <first_protein_id>"
 #     exit 1
 # fi
+echo "API Key: $NCBI_API_KEY"
 
 orthologs_protein_id_list=$1
 first_protein_id=$2
@@ -31,7 +32,15 @@ for protein_id in $(cat "$orthologs_protein_id_list"); do
     python3 1_extract_table.py ${first_protein_id}_gene_table.txt ${protein_id} > full_extracted_table.txt
 
     # Outputs ${first_protein_id}_sequence_w_introns.fasta and ${first_protein_id}_intron_positions.txt
-    python3 2.1_extract_n_insert_introns.py full_extracted_table.txt ${first_protein_id}_sequences.fasta ${protein_id} ${first_protein_id}
+    #python3 2.1_extract_n_insert_introns.py full_extracted_table.txt ${first_protein_id}_sequences.fasta ${protein_id} ${first_protein_id}
+    #python3 1_extract_table.py ${first_protein_id}_gene_table.txt ${protein_id} > ${protein_id}-full_extracted_table.txt
+    # python3 1_extract_table.py NP_000005.3/NP_000005.3_gene_table.txt NP_000005.3 > NP_000005.3-full_extracted_table.txt
+
+    # Outputs ${first_protein_id}_sequence_w_introns.fasta and ${first_protein_id}_intron_positions.txt
+    python3 2_BATCH_extract_n_insert_introns.py ${protein_id}-full_extracted_table.txt ${first_protein_id}_sequences.fasta ${protein_id} ${first_protein_id}
+    # python3 2_BATCH_extract_n_insert_introns.py NP_000005.3-full_extracted_table.txt NP_000005.3/NP_000005.3_sequences.fasta NP_000005.3 NP_000005.3
+
+    rm ${protein_id}-full_extracted_table.txt
 
     echo "Completed processing ${protein_id}"
 
