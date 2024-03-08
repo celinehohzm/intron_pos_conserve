@@ -3,12 +3,8 @@
 ## Goal: 
 To keep track of the number of recent intron gains in primates
 
-## Why is this important??
-Can improve annotation - \
-If introns are conserved in a certain faimily, we can infer that other species who belong to that family have this intron too!
-
 ## Input: 
-A file with any number of NCBI protein accession numbers (eg. NP_000005.3)
+A file with any number of NCBI protein accession numbers (eg. NP_000005.3), see ```test/test_proteinid.txt```
 
 ## Output:
 - A phylogenetic tree diagram that shows which species have this intron conserved (red = not conserved, blue = conserved)
@@ -18,7 +14,7 @@ A file with any number of NCBI protein accession numbers (eg. NP_000005.3)
   - the subgroup in the tree that best fits that intron gain
 
 ## What counts as an intron gain event?
-- Non-conserved in a minimum of 10% of all examined orthologous species.
+- Non-conserved in a minimum of 70% of all examined orthologous species.
 - We allotted "intron conservation scores" to each topology clusters following the criteria of maximized intron preservation and minimized non-conservation
 - Subgroup with highest intron conservation score is chosen as the timeline where the intron was first gained.
 
